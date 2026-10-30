@@ -1,0 +1,1128 @@
+:root {
+  --accent: #ffb300;
+  --bg: #12061f;
+  --panel: rgba(255, 255, 255, 0.06);
+  --text: #fdf3e1;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at top, #2a0b4a, var(--bg) 60%);
+  color: var(--text);
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 20px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--accent);
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+#themePicker {
+  display: flex;
+  gap: 8px;
+}
+
+#themePicker button {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+#themePicker button.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+main {
+  flex: 1;
+  display: flex;
+  gap: 16px;
+  padding: 0 20px 16px;
+  min-height: 0;
+}
+
+/* The picture is sized by fitStage() in app.js to fit this area at 16:9 */
+#stageArea {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#stageWrap {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+#stage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  cursor: crosshair;
+  touch-action: manipulation;
+}
+
+#prompt {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(80%, 640px);
+  padding: 22px 28px;
+  border-radius: 18px;
+  background: rgba(15, 4, 30, 0.72);
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 45%, transparent);
+  text-align: center;
+  pointer-events: none;
+  font-size: clamp(0.95rem, 1.6vw, 1.2rem);
+  line-height: 1.4;
+  animation: bob 1.8s ease-in-out infinite;
+}
+
+#prompt .big {
+  margin-bottom: 8px;
+  font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+  font-weight: 800;
+  color: var(--accent);
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, -56%);
+  }
+}
+
+#guide {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  max-width: 90%;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgba(15, 4, 30, 0.75);
+  border: 1px solid var(--accent);
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  text-align: center;
+  pointer-events: none;
+}
+
+#review {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(10, 2, 20, 0.85);
+}
+
+#review img {
+  max-width: 78%;
+  max-height: 72%;
+  border-radius: 10px;
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+.review-actions {
+  display: flex;
+  gap: 12px;
+}
+
+a.button {
+  display: inline-block;
+  text-decoration: none;
+}
+
+h2 b {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #1b0a00;
+  font-size: 0.85em;
+}
+
+#status {
+  position: absolute;
+  left: 50%;
+  top: 16px;
+  transform: translateX(-50%);
+  max-width: 90%;
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.65);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+#countdown {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  text-shadow: 0 0 30px var(--accent);
+}
+
+#countdown span {
+  font-size: clamp(5rem, 18vw, 12rem);
+  font-weight: 800;
+  color: #fff;
+}
+
+#countdown small {
+  font-size: 1.6rem;
+  color: var(--accent);
+}
+
+#countdown.pop span {
+  animation: pop 1s ease-out;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+#flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#flash.flash {
+  animation: flash 0.6s ease-out;
+}
+
+@keyframes flash {
+  from {
+    opacity: 0.95;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+aside {
+  width: 290px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.howto {
+  border: 1px solid var(--accent);
+  text-align: center;
+}
+
+/* ---------- Prop tiles + hand cursors ---------- */
+
+/* Three round tiles down each side; picked by holding a fingertip inside one */
+.prop-column {
+  position: absolute;
+  top: 16%;
+  bottom: 8%;
+  width: 11%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 3;
+}
+
+#propLeft {
+  left: 1.5%;
+}
+
+#propRight {
+  right: 1.5%;
+}
+
+.prop-tile {
+  --progress: 0;
+  position: relative;
+  width: min(100%, 15vh);
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(15, 4, 30, 0.25);
+  backdrop-filter: blur(2px);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
+}
+
+/* Border ring that fills clockwise while the finger count is held */
+.prop-tile .ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(var(--accent) calc(var(--progress) * 360deg), rgba(255, 255, 255, 0.35) 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+}
+
+.prop-tile .emoji {
+  font-size: clamp(1.2rem, 3vw, 2.6rem);
+  line-height: 1;
+}
+
+.prop-tile small {
+  position: absolute;
+  top: 100%;
+  margin-top: 3px;
+  white-space: nowrap;
+  font-size: clamp(0.55rem, 0.8vw, 0.8rem);
+  text-shadow: 0 1px 3px #000;
+}
+
+#controllerBadge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(15, 4, 30, 0.7);
+  border: 1px solid var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: transform 0.12s linear;
+}
+
+.prop-tile.active {
+  background: color-mix(in srgb, var(--accent) 40%, rgba(15, 4, 30, 0.4));
+  box-shadow: 0 0 16px var(--accent);
+}
+
+.prop-tile.active .ring {
+  background: var(--accent);
+}
+
+/* The tile being picked comes to the front and grows */
+.prop-tile.hover {
+  z-index: 5;
+  transform: scale(1.4);
+  background: rgba(15, 4, 30, 0.7);
+  box-shadow: 0 0 28px var(--accent);
+}
+
+#propLeft .prop-tile.hover {
+  transform: translateX(18%) scale(1.4);
+}
+
+#propRight .prop-tile.hover {
+  transform: translateX(-18%) scale(1.4);
+}
+
+.prop-tile.hover .ring {
+  background: conic-gradient(var(--accent) calc(var(--progress) * 360deg), rgba(255, 255, 255, 0.35) 0);
+}
+
+/* Glowing dot on the controller's fingertip */
+.hand-cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 6;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 30%, var(--accent) 45%, transparent 72%);
+  box-shadow: 0 0 14px var(--accent);
+  pointer-events: none;
+  transition: transform 0.08s linear;
+}
+
+/* ---------- Agent payments ---------- */
+
+#agentCard {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(52%, 520px);
+  max-height: 94%;
+  overflow: auto;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(6, 12, 34, 0.92);
+  border: 1px solid #416cab;
+  box-shadow: 0 0 30px rgba(65, 108, 171, 0.55);
+  font-size: 0.85rem;
+}
+
+.agent-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #9fc0ff;
+}
+
+#agentMode {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #ffb300;
+  color: #1b0a00;
+  font-size: 0.7rem;
+}
+
+#agentMode:empty::after {
+  content: 'DEMO';
+}
+
+/* Booth Agent — XDC Network — Print Agent, with a token travelling between them */
+.agent-lane {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 4px 12px;
+}
+
+.agent-lane::before {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 22px;
+  border-top: 2px dashed rgba(159, 192, 255, 0.35);
+}
+
+.agent-node {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.agent-node span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 4px;
+  border-radius: 50%;
+  background: #14224a;
+  border: 2px solid #416cab;
+  font-size: 1.4rem;
+  transition: box-shadow 0.3s;
+}
+
+.agent-node small {
+  opacity: 0.6;
+  font-weight: 400;
+  font-size: 0.7rem;
+}
+
+.agent-node.busy span {
+  box-shadow: 0 0 0 4px rgba(255, 179, 0, 0.35), 0 0 18px #ffb300;
+  border-color: #ffb300;
+}
+
+#agentToken {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  left: var(--from, 0);
+  font-size: 1.3rem;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+#agentToken.travel {
+  animation: travel 1.1s ease-in-out forwards;
+}
+
+#agentToken.pulse {
+  top: -14px;
+  animation: pulse 0.8s ease-in-out infinite;
+}
+
+@keyframes travel {
+  from {
+    left: var(--from);
+  }
+  to {
+    left: var(--to);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    transform: translateX(-50%) scale(1.3);
+  }
+}
+
+/* Voice payment: order code and the sentence the booth speaks to the guest's Claude */
+#agentClaude {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(159, 192, 255, 0.1);
+  border: 1px solid #9fc0ff;
+  animation: stepIn 0.35s ease-out;
+}
+
+#agentClaude .order-code {
+  font-size: 1rem;
+}
+
+#agentClaude .order-code b {
+  font-size: 1.6rem;
+  letter-spacing: 0.15em;
+  color: #fff;
+}
+
+#agentClaude p {
+  margin: 6px 0;
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+#agentClaude blockquote {
+  margin: 6px 0 10px;
+  padding: 6px 10px;
+  border-left: 3px solid #9fc0ff;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+#agentClaude .review-actions .primary,
+#agentClaude .review-actions .secondary {
+  padding: 8px 14px;
+  font-size: 0.9rem;
+}
+
+/* Mute button on the picture */
+#muteButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 8;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: rgba(15, 4, 30, 0.6);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+#muteButton.muted {
+  border-color: #ff6b6b;
+  background: rgba(60, 0, 0, 0.6);
+}
+
+/* Muted: no spoken-instruction overlays either */
+body.muted #voiceSubtitle,
+body.muted #guide {
+  display: none !important;
+}
+
+/* What the booth says (and just heard), as subtitles */
+#voiceSubtitle {
+  position: absolute;
+  left: 50%;
+  bottom: 70px;
+  transform: translateX(-50%);
+  max-width: 70%;
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+  text-align: center;
+}
+
+#voiceSubtitle div {
+  padding: 5px 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  font-size: 0.95rem;
+}
+
+#voiceSubtitle .heard {
+  border: 1px solid var(--accent);
+  font-size: 0.85rem;
+}
+
+/* WalletConnect pairing QR for the guest's wallet */
+#agentQr {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(255, 179, 0, 0.12);
+  border: 1px solid var(--accent);
+  animation: stepIn 0.35s ease-out;
+}
+
+#agentQrCode {
+  flex-shrink: 0;
+  width: min(42%, 190px);
+  aspect-ratio: 1;
+  padding: 6px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+#agentQrCode svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#agentQr p {
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.mode-switch {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 4px 0 6px;
+  font-size: 0.9rem;
+}
+
+.mode-switch label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+#agentSteps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#agentSteps li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  opacity: 0.45;
+  transition: opacity 0.3s;
+}
+
+#agentSteps li.active,
+#agentSteps li.done,
+#agentSteps li.error {
+  opacity: 1;
+}
+
+#agentSteps b {
+  display: block;
+  font-size: 0.85rem;
+}
+
+#agentSteps small {
+  display: block;
+  opacity: 0.8;
+  animation: stepIn 0.35s ease-out;
+}
+
+#agentSteps .marker {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+#agentSteps li.active .marker {
+  border-color: #ffb300;
+  border-top-color: transparent;
+  animation: spin 0.8s linear infinite;
+}
+
+#agentSteps li.done .marker {
+  border-color: #4cd47a;
+  background: #4cd47a;
+  color: #04210f;
+}
+
+#agentSteps li.error .marker {
+  border-color: #ff6b6b;
+  background: #ff6b6b;
+  color: #2a0000;
+}
+
+#agentSteps li.error small {
+  color: #ff9a9a;
+}
+
+#agentSteps a,
+#agentResult a {
+  color: #9fc0ff;
+}
+
+#agentResult {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  animation: stepIn 0.4s ease-out;
+}
+
+#agentResult.ok {
+  background: rgba(76, 212, 122, 0.15);
+  border: 1px solid #4cd47a;
+}
+
+#agentResult.failed {
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid #ff6b6b;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes stepIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.budget {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  margin: 6px 0 4px;
+}
+
+#agentBudget {
+  height: 100%;
+  width: 0;
+  background: #416cab;
+}
+
+button.link {
+  float: right;
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+dialog {
+  width: min(92vw, 440px);
+  border: 1px solid #416cab;
+  border-radius: 14px;
+  background: #120a24;
+  color: var(--text);
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+dialog form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+dialog label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+dialog input {
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+dialog small {
+  opacity: 0.65;
+}
+
+dialog .row {
+  display: flex;
+  gap: 10px;
+}
+
+dialog .row label {
+  flex: 1;
+}
+
+.error {
+  color: #ff8a8a;
+  font-size: 0.85rem;
+}
+
+#gestureList {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+#gestureList li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#gestureList span {
+  width: 3.4rem;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 1.6rem;
+}
+
+#gestureList b {
+  display: block;
+  font-size: 0.95rem;
+}
+
+#gestureList small {
+  display: block;
+  font-size: 0.78rem;
+  opacity: 0.7;
+}
+
+.howto p {
+  margin: 8px 0 12px;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.gestures {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-size: 0.85rem;
+}
+
+.gestures span {
+  display: block;
+  font-size: 2.6rem;
+  line-height: 1.1;
+}
+
+.gestures .or {
+  opacity: 0.6;
+}
+
+#gestureMeter {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  border-radius: 999px;
+  background: rgba(15, 4, 30, 0.8);
+  border: 2px solid var(--accent);
+  font-size: 1.1rem;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+#gestureIcon {
+  font-size: 2rem;
+}
+
+#gestureMeter .bar {
+  width: 140px;
+  height: 10px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+#gestureFill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.1s linear;
+}
+
+aside section {
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--panel);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.chip.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.note {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+#settingsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.setting {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+.setting span {
+  display: flex;
+  justify-content: space-between;
+}
+
+.setting em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.setting-toggle {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.setting input[type='text'] {
+  background: rgba(0, 0, 0, 0.3);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 0.95rem;
+}
+
+input[type='range'],
+input[type='checkbox'] {
+  accent-color: var(--accent);
+}
+
+button.wide {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.switch {
+  cursor: pointer;
+}
+
+#gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#gallery a {
+  position: relative;
+  display: block;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+}
+
+#gallery a:hover {
+  border-color: var(--accent);
+}
+
+#gallery img {
+  display: block;
+  width: 100%;
+}
+
+#gallery span {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.6);
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+#gallery .empty {
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+.primary,
+.secondary {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 26px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary {
+  background: var(--accent);
+  color: #1b0a00;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+.secondary {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@media (max-width: 800px) {
+  body {
+    height: auto;
+    overflow: auto;
+  }
+
+  main {
+    flex-direction: column;
+  }
+
+  #stageArea {
+    flex: none;
+    height: calc((100vw - 40px) * 9 / 16);
+  }
+
+  aside {
+    width: 100%;
+  }
+
+  #gallery {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  #gallery a {
+    width: 160px;
+    flex-shrink: 0;
+  }
+}

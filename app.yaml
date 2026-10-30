@@ -1,0 +1,12 @@
+name: Festive Photobooth
+description: Photobooth that cuts you out of the camera feed and places you in front of animated festive backgrounds (Diwali, more themes pluggable).
+ports: []
+bricks:
+- arduino:web_ui: {}
+- arduino:gesture_recognition:
+    model: gesture-recognition
+- arduino:tts:
+    model: pipertts_en
+- arduino:asr:
+    model: whisper-small-quantized
+icon: 🪔

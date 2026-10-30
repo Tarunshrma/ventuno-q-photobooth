@@ -1,0 +1,7 @@
+# ignore app cache folder
+*.claude-local*
+*.pyc
+.cache/
+__pycache__/
+models/
+photos/

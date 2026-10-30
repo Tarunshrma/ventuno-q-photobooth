@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Festive Photobooth</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>🪔 Festive Photobooth</h1>
+      <nav id="themePicker"></nav>
+    </header>
+
+    <main>
+      <div id="stageArea">
+        <div id="stageWrap">
+          <canvas id="stage" width="1280" height="720"></canvas>
+          <div id="propLeft" class="prop-column" hidden></div>
+          <div id="propRight" class="prop-column" hidden></div>
+          <div id="controllerBadge" hidden>🎮 In control</div>
+          <div id="voiceSubtitle" hidden></div>
+          <button id="muteButton" title="Mute the booth (voice, sounds and spoken instructions)">🔊</button>
+
+          <div id="prompt" hidden>
+            <div class="big">👋 Step in front of the camera</div>
+            <div>Stand 1–2 metres away so your face and shoulders are in the picture.</div>
+          </div>
+
+          <div id="guide" hidden></div>
+          <div id="gestureMeter" hidden>
+            <span id="gestureIcon"></span>
+            <div class="bar"><div id="gestureFill"></div></div>
+            <span>Hold it…</span>
+          </div>
+          <div id="countdown" hidden></div>
+          <div id="flash"></div>
+          <div id="status" hidden></div>
+
+          <div id="review" hidden>
+            <img id="reviewImage" alt="Your photo" />
+            <div class="review-actions">
+              <button id="reviewPrint" class="primary">🖨️ Print it — show 👍</button>
+              <a id="reviewDownload" class="button secondary" download>⬇ Download</a>
+              <button id="reviewAgain" class="secondary">📸 Take another</button>
+            </div>
+          </div>
+
+          <div id="agentCard" hidden>
+            <div class="agent-title">🤝 Agent-to-agent payment <span id="agentMode" hidden></span></div>
+            <div class="agent-lane">
+              <div class="agent-node" data-node="guest" hidden><span>📱</span>Your wallet<small>Rabby · WalletConnect</small></div>
+              <div class="agent-node" data-node="booth"><span>📸</span>Booth Agent<small>VENTUNO Q</small></div>
+              <div class="agent-node" data-node="chain"><span>⛓️</span>XDC Network<small>USDC · x402</small></div>
+              <div class="agent-node" data-node="printer"><span>🖨️</span>Print Agent<small>Laptop</small></div>
+              <div id="agentToken"></div>
+            </div>
+            <div id="agentQr" hidden>
+              <div id="agentQrCode"></div>
+              <div>
+                <b>Scan with your wallet app</b>
+                <p>Open <b>Rabby</b> (or any WalletConnect wallet), tap <b>Scan</b>, then approve the <span id="agentQrPrice">USDC</span> payment. No gas needed.</p>
+                <p class="note" id="agentQrTimer"></p>
+              </div>
+            </div>
+            <div id="agentClaude" hidden>
+              <div class="order-code">Order <b id="agentOrderCode"></b></div>
+              <p id="agentClaudeHint"></p>
+              <blockquote id="agentClaudePrompt"></blockquote>
+              <div class="review-actions">
+                <button id="agentReady" class="primary">👍 Claude is listening</button>
+                <button id="agentRepeat" class="secondary">🔁 Say it again</button>
+              </div>
+            </div>
+            <ol id="agentSteps"></ol>
+            <div id="agentResult" hidden></div>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+        <section class="howto">
+          <h2>🖐️ Show a gesture to the camera</h2>
+          <ul id="gestureList"></ul>
+          <button id="shootButton" class="secondary wide">📸 Take photo now</button>
+        </section>
+
+        <section id="faceArtSection">
+          <h2><b>1</b> Choose face art</h2>
+          <div id="faceArtList" class="chips"></div>
+        </section>
+
+        <section id="settingsSection">
+          <h2><b>2</b> Decorate the scene</h2>
+          <label class="setting setting-toggle"><input type="checkbox" id="brandingToggle" /> <span id="brandingLabel"></span></label>
+          <div id="settingsList"></div>
+          <p id="tapHint" class="note"></p>
+        </section>
+
+        <section id="agentSection">
+          <h2>🤝 Agent payments <button id="agentSetupButton" class="link">⚙️ Setup</button></h2>
+          <div class="mode-switch" role="radiogroup" aria-label="Who pays for prints">
+            <label><input type="radio" name="paymentMode" value="claude" /> 🗣️ Guest's Claude (voice)</label>
+            <label><input type="radio" name="paymentMode" value="guest" /> 📱 Guest wallet (QR)</label>
+            <label><input type="radio" name="paymentMode" value="booth" /> 📸 Booth wallet</label>
+          </div>
+          <p id="agentSummary" class="note"></p>
+          <label class="setting setting-toggle"><input type="checkbox" id="voiceToggle" checked /> <span>🔊 Booth voice</span></label>
+          <label class="setting setting-toggle"><input type="checkbox" id="voiceHere" /> <span>🎧 Play the voice on this screen</span></label>
+          <p id="voiceStatus" class="note"></p>
+          <div class="budget"><div id="agentBudget"></div></div>
+          <p id="agentBudgetText" class="note"></p>
+        </section>
+
+        <section>
+          <h2><b>3</b> Your photos</h2>
+          <div id="gallery"><p class="empty">Photos you take will appear here.</p></div>
+        </section>
+      </aside>
+    </main>
+
+    <dialog id="agentSetup">
+      <form method="dialog" id="agentForm">
+        <h2>⚙️ Booth Agent setup</h2>
+        <label>Print Agent URL<input name="printAgentUrl" placeholder="http://192.168.1.50:8402" /></label>
+        <label>
+          Print Agent booth key (voice mode, optional)
+          <input name="printAgentKey" type="password" autocomplete="off" placeholder="Shared key the Print Agent expects" />
+        </label>
+        <label>
+          WalletConnect project ID (guest payments)
+          <input name="walletConnectProjectId" autocomplete="off" placeholder="from cloud.reown.com" />
+          <small>Free from cloud.reown.com. Needed for the guest-wallet QR code.</small>
+        </label>
+        <label>
+          Booth wallet private key (booth-wallet mode)
+          <input name="privateKey" type="password" autocomplete="off" placeholder="Leave empty to keep the current key" />
+          <small>Stored only on the board. It is never shown again or sent to the browser.</small>
+        </label>
+        <div class="row">
+          <label>Max per print (USDC)<input name="maxPriceUsdc" type="number" step="0.01" min="0" /></label>
+          <label>Daily limit (USDC)<input name="dailyLimitUsdc" type="number" step="0.5" min="0" /></label>
+        </div>
+        <p id="agentFormAddress" class="note"></p>
+        <p id="agentFormError" class="error" hidden></p>
+        <div class="review-actions">
+          <button type="submit" value="save" class="primary">Save</button>
+          <button type="submit" value="cancel" class="secondary" formnovalidate>Cancel</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="js/vision.js"></script>
+    <script src="js/segmentation.js"></script>
+    <script src="js/face.js"></script>
+    <script src="js/sfx.js"></script>
+    <script src="js/branding.js"></script>
+    <script src="js/themes/registry.js"></script>
+    <!-- Themes: add one <script> per theme file in js/themes/ -->
+    <script src="js/themes/diwali.js"></script>
+    <script src="js/themes/halloween.js"></script>
+    <script src="js/walletpay.js"></script>
+    <script src="js/agent.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
