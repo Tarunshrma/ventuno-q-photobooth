@@ -1,0 +1,26 @@
+Extend the Print Agent with a voice-payment "order" flow, used by the photobooth on the LAN
+and paid by the guest's own Claude through xdcai.tech.
+
+1. POST /orders  (called by the booth on the LAN, not paid)
+   Header X-Booth-Key: <shared key> (reject if it doesn't match BOOTH_KEY in .env; skip check if BOOTH_KEY empty)
+   Body: {"image": "data:image/jpeg;base64,...", "jobId": "...", "copies": 1}
+   Create a pending order with a short 4-digit numeric code (unique among open orders, expires after 10 min).
+   Respond 201: {"code":"4827","status":"pending","priceUsdc":"0.01","network":"<xdc network id>"}
+
+2. GET /orders/{code}  (free; the booth polls it every ~1.5 s)
+   Respond: {"code":"4827","status":"pending|paid|printing|printed|failed|expired",
+             "priceUsdc":"0.01","payer":"0x...","txHash":"0x...","explorerUrl":"..."}
+   Status must move pending -> paid (after facilitator settle) -> printing -> printed.
+
+3. Paid action for agents: "pay for XDC photobooth print order <code>"
+   Register it as a service/tool on xdcai.tech as a service provider (MCP), following
+   https://docs.xdcai.tech (facilitator + seller docs). Name/description must clearly match the phrase
+   "XDC AI photo print service" and "pay for XDC photobooth print order <code>", so a Claude user who
+   says that sentence finds and calls it. Input: order code. Price: the order's price (x402 "exact",
+   USDC on XDC mainnet, settled via the XDC AI public facilitator, payTo = our seller wallet).
+   On successful settle: mark the order paid (store payer + txHash), print it, then mark printed.
+   Reject codes that are unknown, expired or already paid.
+
+4. Keep the existing x402 POST /print and GET /jobs working unchanged (the booth's other modes use them).
+5. Log every step clearly for the demo. Update README with the order API and the xdcai.tech registration steps.
+When done, tell me: the order API base URL, BOOTH_KEY, and the exact tool/service name registered on xdcai.tech.
